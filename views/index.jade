@@ -1,5 +1,7 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+	form(action="/detect" method="post" enctype="multipart/form-data" name="photo")
+		input(type="file" name="photo" accept="image/*")
+		input(type="submit" value="Upload photo")
+	.container
