@@ -32,7 +32,7 @@ var express = require('express');
 var request = require('request');
 var fs = require('fs');
 var router = express.Router();
-
+require('dotenv').config();
 /* GET users listing. */
 router.post('/', function(req, res, next) {
 
@@ -41,9 +41,9 @@ router.post('/', function(req, res, next) {
 
     var formData = {
         // Pass a simple key-value pair
-        api_key: '6vx_JevDZSHqYEsiiGkSQIGYCU_W9vs0',
+        api_key: process.env.API_KEY,
 
-        api_secret: 'FJ_kRVr-KcoPGlv7B4Ubro4i-7r2u-q5',
+        api_secret: process.env.API_SECRET,
 
         // Pass data via Streams
         image_file: fs.createReadStream(req.file.path),

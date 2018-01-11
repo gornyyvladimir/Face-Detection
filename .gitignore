@@ -32,3 +32,7 @@ uploads
 
 # Debug log from npm
 npm-debug.log
+
+#ENV
+.env
+.tokens
