@@ -29,9 +29,9 @@
 
 
 var express = require('express');
+var router = express.Router();
 var request = require('request');
 var fs = require('fs');
-var router = express.Router();
 require('dotenv').config();
 /* GET users listing. */
 router.post('/', function(req, res, next) {
