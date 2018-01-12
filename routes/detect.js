@@ -36,7 +36,7 @@ require('dotenv').config();
 /* GET users listing. */
 router.post('/', function(req, res, next) {
 
-	// console.log(req.file);
+	console.log(req.files);
 	// res.send("Hi");
 
     var formData = {
