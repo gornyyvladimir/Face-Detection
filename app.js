@@ -13,6 +13,15 @@ var add = require('./routes/add');
 
 var app = express();
 
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -22,7 +31,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: true }));
-app.use(multer({dest:'./uploads/'}).single('photo'));
+app.use(multer({storage: storage}).single('photo'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 

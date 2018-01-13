@@ -29,6 +29,9 @@ node_modules
 # Uploads
 uploads
 
+#Crop
+crop
+
 
 # Debug log from npm
 npm-debug.log

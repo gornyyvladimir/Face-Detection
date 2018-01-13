@@ -32,11 +32,22 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 var fs = require('fs');
+var Jimp = require("jimp");
 require('dotenv').config();
 /* GET users listing. */
+
+function cropImage(filePath, options) {
+	console.log("crop: ", filePath);
+	Jimp.read(filePath).then(function (image) {
+  	image.crop( options.x, options.y, options.w, options.h )
+         .write("./crop/" + options.i + ".jpg"); // save
+	}).catch(function (err) {
+	    console.error(err);
+	});
+}
+
 router.post('/', function(req, res, next) {
 
-	console.log(req.files);
 	// res.send("Hi");
 
     var formData = {
@@ -54,14 +65,24 @@ router.post('/', function(req, res, next) {
         return_attributes: 'gender,age'
     };
 
-    // var response;
-
     request.post({ url: 'https://api-us.faceplusplus.com/facepp/v3/detect', formData: formData }, function optionalCallback(err, httpResponse, body) {
         if (err) {
             return console.error('upload failed:', err);
         }
-        // response = body;
         res.send(body);
+
+				var faces = JSON.parse(body).faces;
+
+				for (var i = 0; i < faces.length; i++) {
+					var options = {
+						x: faces[i].face_rectangle.left,
+						y: faces[i].face_rectangle.top,
+						w: faces[i].face_rectangle.width,
+						h: faces[i].face_rectangle.height,
+						i: i
+					};
+					cropImage(req.file.path, options);
+				}
     });
 
     //Здесь сделать проверку

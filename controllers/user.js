@@ -1,13 +1,17 @@
-var Face = require('../models/face.js');
+var User = require('../models/user.js');
+var fs = require('fs');
 
 exports.add = function(req, res) {
-	console.log(req);
 	if(!req.body.faceToken) {
     	res.status(400).send({message: "Face can not be empty"});
     }
-
-    var face = new Face({faceToken: req.body.faceToken});
-    face.save(function(err, data) {
+		console.log("faceToken", req.body.faceToken);
+		var image = {
+			data : fs.readFileSync('./crop/0.jpg'),
+			contentType: 'image/jpeg'
+		};
+    var user = new User({faceTokenArray: [req.body.faceToken], imgArray: [image], name: 'Anatoly'});
+    user.save(function(err, data) {
         console.log(data);
         if(err) {
             console.log(err);

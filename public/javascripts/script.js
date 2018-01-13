@@ -1,5 +1,6 @@
   var form = document.forms.photo;
   var imageContainer = document.querySelector('.container');
+  var facesGlobal;
   // var img = imageContainer.querySelector('.image');
 
   function faceRectangle(faces) {
@@ -19,7 +20,7 @@
               info.innerHTML = 'Age: ' + faces[i].attributes.age.value.toString() + ' Gender: ' + faces[i].attributes.gender.value;
               rect.append(info);
           }
-          
+
           imageContainer.append(rect);
       }
 
@@ -63,12 +64,41 @@
           // console.log(this.responseText);
           console.log(JSON.parse(this.responseText));
 
+          facesGlobal = JSON.parse(this.responseText).faces;
           var faces = JSON.parse(this.responseText).faces;
 
           faceRectangle(faces);
       }
 
   }
+
+  function add() {
+
+    var json = JSON.stringify({faceToken: facesGlobal[0].face_token});
+
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/add");
+    xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+    xhr.onreadystatechange = function() {
+        if (this.readyState != 4) return;
+        if (this.status != 200) {
+            // обработать ошибку
+            alert('ошибка: ' + (this.status ? this.statusText : 'запрос не удался'));
+            return;
+        }
+        // alert("All good");
+        // console.log(this.responseText);
+        console.log(JSON.parse(this.responseText));
+    }
+    xhr.send(json);
+  }
+
+  var button = document.querySelector('.add');
+  button.addEventListener("click", function(event){
+    add();
+  });
 
   form.addEventListener('submit', function(event) {
       event.preventDefault();
