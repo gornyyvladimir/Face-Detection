@@ -3,6 +3,43 @@
   var facesGlobal;
   // var img = imageContainer.querySelector('.image');
 
+  function demoVanilla(file) {
+		var vEl = document.querySelector('.container'),
+			vanilla = new Croppie(vEl, {
+			viewport: { width: 100, height: 100 },
+			boundary: { width: 800, height: 600 },
+			showZoomer: false,
+            enableOrientation: true
+		});
+
+    function readFile(file) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        vanilla.bind({
+          url: e.target.result
+        });
+      }
+      reader.readAsDataURL(file);
+    }
+
+
+      var btn = document.querySelector('.crop');
+      btn.addEventListener('click', function(e) {
+      var img=new Image();
+			vanilla.result({
+				type: 'base64'
+			}).then(function (base64) {
+					img.src=base64;
+          imageContainer.appendChild(img);
+			});
+    });
+
+
+      readFile(file);
+	// }
+}
+
+
   function faceRectangle(faces) {
 
       for (var i = 0; i < faces.length; i++) {
@@ -106,7 +143,8 @@
       var file = form.photo.files[0];
       if (file) {
           imageContainer.innerHTML = '';
-          showImage(file);
+          // showImage(file);
+          demoVanilla(file);
           upload(file);
       }
   });
