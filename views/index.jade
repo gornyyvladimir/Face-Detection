@@ -3,7 +3,10 @@ extends layout
 block content
 	form(action="/detect" method="post" enctype="multipart/form-data" name="photo")
 		input(type="file" name="photo" accept="image/*" id="upload")
-		input(type="submit" value="Upload photo")
-	button(type="button" class="add") Add
+		input(type="submit" value="Submit")
 	button(type="button" class="crop") Crop
 	.container
+		.crop-image
+			p.crop-image__title Uppload Image
+			.crop-image__wrapper
+			.crop-image__result

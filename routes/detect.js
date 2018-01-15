@@ -39,6 +39,7 @@ require('dotenv').config();
 router.post('/', function(req, res, next) {
 
 	// res.send("Hi");
+    console.log(req.body.image_base64);
 
     var formData = {
         // Pass a simple key-value pair
@@ -47,7 +48,8 @@ router.post('/', function(req, res, next) {
         api_secret: process.env.API_SECRET,
 
         // Pass data via Streams
-        image_file: fs.createReadStream(req.file.path),
+        // image_file: fs.createReadStream(req.file.path),
+        image_base64: req.body.image_base64,
         // image_file: req.file.path,
 
         return_landmark: '1',

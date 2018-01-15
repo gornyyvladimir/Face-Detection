@@ -1,46 +1,53 @@
   var form = document.forms.photo;
   var imageContainer = document.querySelector('.container');
-  var facesGlobal;
   // var img = imageContainer.querySelector('.image');
 
-  function demoVanilla(file) {
-		var vEl = document.querySelector('.container'),
-			vanilla = new Croppie(vEl, {
-			viewport: { width: 100, height: 100 },
-			boundary: { width: 800, height: 600 },
-			showZoomer: false,
-            enableOrientation: true
+  function cropImage() {
+
+		var container = document.querySelector('.crop-image__wrapper');
+		var croppie = new Croppie(container, {
+			viewport: { width: 200, height: 200 },
+			boundary: { width: 600, height: 600 },
+      enableResize: true,
+      enableOrientation: true
 		});
 
-    function readFile(file) {
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        vanilla.bind({
-          url: e.target.result
-        });
+    function readFile(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.querySelector('.crop-image').classList.add('ready');
+          croppie.bind({
+            url: e.target.result
+          });
+        }
+        reader.readAsDataURL(input.files[0]);
       }
-      reader.readAsDataURL(file);
+      else {
+        console.log("Your browser does not support the FileReader API")
+      }
     }
 
+    var upload = document.querySelector('#upload');
+    upload.addEventListener('change', function(){readFile(this)});
 
       var btn = document.querySelector('.crop');
       btn.addEventListener('click', function(e) {
-      var img=new Image();
-			vanilla.result({
-				type: 'base64'
-			}).then(function (base64) {
-					img.src=base64;
-          imageContainer.appendChild(img);
-			});
+        croppie.result({
+          type: 'base64',
+          format: 'jpeg'
+        }).then(function (base64) {
+            var img=new Image();
+  					img.src=base64;
+            var result = document.querySelector('.crop-image__result');
+            result.innerHTML = '';
+            result.appendChild(img);
+  			});
     });
-
-
-      readFile(file);
-	// }
 }
 
 
-  function faceRectangle(faces) {
+  function faceRectangle(faces, container) {
 
       for (var i = 0; i < faces.length; i++) {
 
@@ -57,10 +64,8 @@
               info.innerHTML = 'Age: ' + faces[i].attributes.age.value.toString() + ' Gender: ' + faces[i].attributes.gender.value;
               rect.append(info);
           }
-
-          imageContainer.append(rect);
+          container.appendChild(rect);
       }
-
   }
 
   function showImage(file) {
@@ -109,42 +114,75 @@
 
   }
 
-  function add() {
+  function detect() {
 
-    var json = JSON.stringify({faceToken: facesGlobal[0].face_token});
+    var result = document.querySelector('.crop-image__result img');
+    //удалить сначала data:base64...
+    var imageBase64 = result.src.split(',')[1];
 
+    console.log(imageBase64);
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/add");
-    xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-
-    xhr.onreadystatechange = function() {
-        if (this.readyState != 4) return;
-        if (this.status != 200) {
-            // обработать ошибку
-            alert('ошибка: ' + (this.status ? this.statusText : 'запрос не удался'));
-            return;
-        }
-        // alert("All good");
-        // console.log(this.responseText);
-        console.log(JSON.parse(this.responseText));
-    }
-    xhr.send(json);
+    fetch('/detect', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        image_base64: imageBase64
+      })
+    })
+    .then(function(response){
+      return response.json()
+    })
+    .then(function(data){
+      console.log(data);
+      faceRectangle(data.faces, document.querySelector('.crop-image__result'));
+    })
+    .catch(function(error) {
+      console.log('request failed', error)
+    });
   }
 
-  var button = document.querySelector('.add');
-  button.addEventListener("click", function(event){
-    add();
-  });
+
+  // function add() {
+
+  //   var json = JSON.stringify({faceToken: facesGlobal[0].face_token});
+
+
+  //   var xhr = new XMLHttpRequest();
+  //   xhr.open("POST", "/add");
+  //   xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+  //   xhr.onreadystatechange = function() {
+  //       if (this.readyState != 4) return;
+  //       if (this.status != 200) {
+  //           // обработать ошибку
+  //           alert('ошибка: ' + (this.status ? this.statusText : 'запрос не удался'));
+  //           return;
+  //       }
+  //       // alert("All good");
+  //       // console.log(this.responseText);
+  //       console.log(JSON.parse(this.responseText));
+  //   }
+  //   xhr.send(json);
+  // }
+
+  // var button = document.querySelector('.add');
+  // button.addEventListener("click", function(event){
+  //   add();
+  // });
 
   form.addEventListener('submit', function(event) {
       event.preventDefault();
 
-      var file = form.photo.files[0];
-      if (file) {
-          imageContainer.innerHTML = '';
-          // showImage(file);
-          demoVanilla(file);
-          upload(file);
-      }
+      // var file = form.photo.files[0];
+      // if (file) {
+      //     imageContainer.innerHTML = '';
+      //     // showImage(file);
+      //     demoVanilla(file);
+      //     upload(file);
+      // }
+      detect();
   });
+
+  cropImage();
