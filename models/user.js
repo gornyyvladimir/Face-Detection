@@ -2,9 +2,7 @@ var mongoose = require('mongoose');
 
 var UserSchema = mongoose.Schema({
     faceTokenArray: [String],
-    imgArray: [{
-   		data: Buffer, contentType: String
-   	}],
+    imgArray: [String],
     name: String
 });
 

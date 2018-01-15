@@ -64,7 +64,8 @@
             info.innerHTML = 'Age: ' + faces[i].attributes.age.value.toString() + ' Gender: ' + faces[i].attributes.gender.value;
             rect.append(info);
         }
-        rect.dataset.faceToken = faces[i].face_token;
+        var img = container.querySelector('img');
+        img.dataset.faceToken = faces[i].face_token;
         container.appendChild(rect);
     }
   }
@@ -97,12 +98,50 @@
     });
   }
 
+  function addFace() {
+
+    var form = document.querySelector('form');
+    var result = document.querySelector('.crop-image__result img');
+    var imageBase64 = result.src.split(',')[1];
+
+    console.log(form.username.value);
+
+    fetch('/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          image_base64: imageBase64,
+          face_tokens: result.dataset.faceToken,
+          username: form.username.value
+        })
+      })
+      .then(function(response){
+        return response.json()
+      })
+      .catch(function(error) {
+        console.log('request failed', error)
+      });
+  }
+
 //клик по кнопке submit
 var form = document.querySelector('form');
 form.addEventListener('submit', function(event) {
   event.preventDefault();
   detect();
 });
+
+var add = document.querySelector('.add');
+add.addEventListener('click', function(e) {
+  console.log('add');
+  addFace();
+})
+
+var search = document.querySelector('.search');
+search.addEventListener('click', function(e) {
+  console.log('search');
+})
 
 //запуск инициализации
 init();
