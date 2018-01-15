@@ -3,24 +3,13 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var multer  = require('multer')
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var detect = require('./routes/detect');
 var add = require('./routes/add');
-// var users = require('./routes/users');
 
 var app = express();
-
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './uploads/')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname)
-  }
-})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,14 +20,29 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json({limit: "1mb"}));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(multer({storage: storage}).single('photo'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/detect', detect);
 app.use('/add', add);
-// app.use('/users', users);
+
+// Configuring the database
+var dbConfig = require('./config/database.js');
+var mongoose = require('mongoose');
+
+mongoose.connect(dbConfig.url, {
+    useMongoClient: true
+});
+
+mongoose.connection.on('error', function() {
+    console.log('Could not connect to the database. Exiting now...');
+    process.exit();
+});
+
+mongoose.connection.once('open', function() {
+    console.log("Successfully connected to the database");
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -58,21 +62,5 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// Configuring the database
-var dbConfig = require('./config/database.js');
-var mongoose = require('mongoose');
-
-mongoose.connect(dbConfig.url, {
-    useMongoClient: true
-});
-
-mongoose.connection.on('error', function() {
-    console.log('Could not connect to the database. Exiting now...');
-    process.exit();
-});
-
-mongoose.connection.once('open', function() {
-    console.log("Successfully connected to the database");
-})
 
 module.exports = app;

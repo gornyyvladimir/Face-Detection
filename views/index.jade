@@ -1,7 +1,7 @@
 extends layout
 
 block content
-	form(action="/detect" method="post" enctype="multipart/form-data" name="photo")
+	form
 		input(type="file" name="photo" accept="image/*" id="upload")
 		input(type="submit" value="Submit")
 	button(type="button" class="crop") Crop
