@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var detect = require('./routes/detect');
 var add = require('./routes/add');
+var search = require('./routes/search');
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/detect', detect);
 app.use('/add', add);
+app.use('/search', search);
 
 // Configuring the database
 var dbConfig = require('./config/database.js');

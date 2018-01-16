@@ -125,6 +125,38 @@
       });
   }
 
+  function searchFace() {
+    var form = document.querySelector('form');
+    var container = document.querySelector('.crop-image__result');
+    var result = document.querySelector('.crop-image__result img');
+    var imageBase64 = result.src.split(',')[1];
+
+    console.log(form.username.value);
+
+    fetch('/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          face_tokens: result.dataset.faceToken
+        })
+      })
+      .then(function(response){
+        return response.json();
+      })
+      .then(function(data){
+        var imageBase64 = data.image;
+        imageBase64 = 'data:image/jpeg;base64,' + imageBase64;
+        var img = new Image();
+        img.src = imageBase64;
+        container.appendChild(img);
+      })
+      .catch(function(error) {
+        console.log('request failed', error);
+      });
+  }
+
 //клик по кнопке submit
 var form = document.querySelector('form');
 form.addEventListener('submit', function(event) {
@@ -141,6 +173,7 @@ add.addEventListener('click', function(e) {
 var search = document.querySelector('.search');
 search.addEventListener('click', function(e) {
   console.log('search');
+  searchFace();
 })
 
 //запуск инициализации
