@@ -8,7 +8,7 @@ block content
 					.hero-body
 						.container
 							h1.title
-								| Face Detection
+								| Face Recognition
 							h2.subtitle
 								| by Gornyy Vladimir
 				.controls.space
@@ -18,7 +18,7 @@ block content
 					.field
 						label(class="label") Name
 						.control		
-							input(type="text" name="username" class="input")
+							input(type="text" name="username" class="input" id="username")
 					.field.is-grouped
 						.control
 							button.button.is-primary.detect
@@ -26,29 +26,37 @@ block content
 									i.fas.fa-cogs
 								span Detect							
 						.control
-							button.button.is-success.add
-								span.icon.is-small
-									i.fas.fa-plus
-								span Add	
-						.control
 							button.button.is-link.search
 								span.icon.is-small
 									i.fas.fa-search
 								span Search	
+						.control
+							button.button.is-success.add
+								span.icon.is-small
+									i.fas.fa-plus
+								span Add	
 				.card
 					.card-image
-						figure.image.is-4by3
-							img(src='https://bulma.io/images/placeholders/1280x960.png', alt='Placeholder image')
+						.crop-image__wrapper
 					.card-content
 						.content
 							.controls
 								.field.is-grouped.is-grouped-centered
 									.control					
-										button(type="button" class="button rotate" data-deg="-90") Rotate Left
+										button.button.is-primary.rotate(data-deg="-90")
+											span.icon.is-small
+												i.fas.fa-undo
+											span Rotate Left
 									.control		
-										button(type="button" class="button crop") Crop
+										button.button.is-danger.crop
+											span.icon.is-small
+												i.fas.fa-crop
+											span Crop
 									.control		
-										button(type="button" class="button rotate" data-deg="90") Rotate Right
+										button.button.is-primary.rotate(data-deg="90")
+											span Rotate Right
+											span.icon.is-small
+												i.fas.fa-redo
 		.crop-image
 			p.crop-image__title Uppload Image
 			.crop-image__wrapper

@@ -6,7 +6,7 @@
     var container = document.querySelector('.crop-image__wrapper');
     var croppie = new Croppie(container, {
       viewport: { width: 200, height: 200 },
-      boundary: { width: 600, height: 600 },
+      showZoomer: false,
       enableResize: true,
       enableOrientation: true
     });
@@ -43,6 +43,14 @@
             result.appendChild(img);
         });
     });
+
+    var rotate = document.querySelectorAll('.rotate');
+    console.log(rotate);
+    for(var i=0; i<rotate.length; i++){
+      rotate[i].addEventListener('click', function(e){
+        croppie.rotate(parseInt(this.dataset.deg));
+      });
+    }
 }
 
 
@@ -103,8 +111,7 @@
     var form = document.querySelector('form');
     var result = document.querySelector('.crop-image__result img');
     var imageBase64 = result.src.split(',')[1];
-
-    console.log(form.username.value);
+    var username = document.querySelector('#username')
 
     fetch('/add', {
         method: 'POST',
@@ -114,7 +121,7 @@
         body: JSON.stringify({
           image_base64: imageBase64,
           face_tokens: result.dataset.faceToken,
-          username: form.username.value
+          username: username.value
         })
       })
       .then(function(response){
@@ -130,8 +137,7 @@
     var container = document.querySelector('.crop-image__result');
     var result = document.querySelector('.crop-image__result img');
     var imageBase64 = result.src.split(',')[1];
-
-    console.log(form.username.value);
+    var username = document.querySelector('#username')
 
     fetch('/search', {
         method: 'POST',

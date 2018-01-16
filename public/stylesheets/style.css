@@ -11,7 +11,7 @@
 	padding-right: 1.5rem;
 }*/
 
-.crop-image__wrapper {
+/*.crop-image__wrapper {
 	display: none;
 }
 
@@ -21,6 +21,10 @@
 
 .ready .crop-image__wrapper {
 	display: block;
+}*/
+
+.crop-image__wrapper {
+	height: 600px;
 }
 
 .crop-image__result {
