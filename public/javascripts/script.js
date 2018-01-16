@@ -5,7 +5,7 @@
   function cropImage() {
     var container = document.querySelector('.crop-image__wrapper');
     var croppie = new Croppie(container, {
-      viewport: { width: 200, height: 200 },
+      viewport: { width: 400, height: 400 },
       showZoomer: false,
       enableResize: true,
       enableOrientation: true
@@ -15,7 +15,7 @@
       if (input.files && input.files[0]) {
         var reader = new FileReader();
         reader.onload = function(e) {
-          document.querySelector('.crop-image').classList.add('ready');
+          // document.querySelector('.crop-image').classList.add('ready');
           croppie.bind({
             url: e.target.result
           });
