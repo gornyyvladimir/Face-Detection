@@ -70,7 +70,7 @@
     }
   }
 
-  function detect() {
+  function detectFace() {
     var result = document.querySelector('.crop-image__result img');
     //удалить сначала data:base64...
     var imageBase64 = result.src.split(',')[1];
@@ -158,10 +158,9 @@
   }
 
 //клик по кнопке submit
-var form = document.querySelector('form');
-form.addEventListener('submit', function(event) {
-  event.preventDefault();
-  detect();
+var detect = document.querySelector('.detect');
+detect.addEventListener('click', function(event) {
+  detectFace();
 });
 
 var add = document.querySelector('.add');

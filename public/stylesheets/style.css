@@ -1,6 +1,15 @@
-.container {
-	position: relative;
+.space {
+	padding-bottom: 1.5rem;
 }
+
+.hero-body {
+	padding-left: 0;
+}
+
+/*.container {
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+}*/
 
 .crop-image__wrapper {
 	display: none;
