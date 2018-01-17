@@ -37,7 +37,17 @@ block content
 								span Add	
 				.card
 					.card-image
-						.crop-image__wrapper
+						.crop-image
+							.crop-image-title
+								.notification.is-link.has-text-centered
+									| Please upload image
+							.crop-image-croppie
+							.crop-image-wrapper.is-horizontal-center
+								span Detection image
+								.crop-image-result
+						.search-wrapper.is-horizontal-center.hidden
+							span Image from database
+							.search-result
 					.card-content
 						.content
 							.controls
@@ -57,7 +67,3 @@ block content
 											span Rotate Right
 											span.icon.is-small
 												i.fas.fa-redo
-		.crop-image
-			p.crop-image__title Uppload Image
-			.crop-image__wrapper
-			.crop-image__result

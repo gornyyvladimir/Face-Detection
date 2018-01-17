@@ -1,9 +1,14 @@
+var cropImageContainer = document.querySelector('.crop-image');
+var croppieContainer = document.querySelector('.crop-image-croppie');
+var searchResultContainer = document.querySelector('.search-wrapper');
+var cropImageResult = document.querySelector('.crop-image-result');
+
   function init() {
     cropImage();
   }
 
   function cropImage() {
-    var container = document.querySelector('.crop-image__wrapper');
+    var container = croppieContainer;
     var croppie = new Croppie(container, {
       viewport: { width: 400, height: 400 },
       showZoomer: false,
@@ -15,7 +20,8 @@
       if (input.files && input.files[0]) {
         var reader = new FileReader();
         reader.onload = function(e) {
-          // document.querySelector('.crop-image').classList.add('ready');
+          cropImageContainer.classList.remove('result');
+          cropImageContainer.classList.add('ready');
           croppie.bind({
             url: e.target.result
           });
@@ -28,7 +34,10 @@
     }
 
     var upload = document.querySelector('#upload');
-    upload.addEventListener('change', function(){readFile(this)});
+    upload.addEventListener('change', function() {
+      readFile(this);
+      searchResultContainer.classList.add('hidden');
+    });
 
       var btn = document.querySelector('.crop');
       btn.addEventListener('click', function(e) {
@@ -38,7 +47,9 @@
         }).then(function (base64) {
             var img=new Image();
             img.src=base64;
-            var result = document.querySelector('.crop-image__result');
+            cropImageContainer.classList.remove('ready');
+            cropImageContainer.classList.add('result');
+            var result = cropImageResult;
             result.innerHTML = '';
             result.appendChild(img);
         });
@@ -79,7 +90,7 @@
   }
 
   function detectFace() {
-    var result = document.querySelector('.crop-image__result img');
+    var result = cropImageResult.querySelector('img');
     //удалить сначала data:base64...
     var imageBase64 = result.src.split(',')[1];
 
@@ -99,7 +110,7 @@
     })
     .then(function(data){
       console.log(data);
-      faceRectangle(data, document.querySelector('.crop-image__result'));
+      faceRectangle(data, cropImageResult);
     })
     .catch(function(error) {
       console.log('request failed', error)
@@ -109,7 +120,7 @@
   function addFace() {
 
     var form = document.querySelector('form');
-    var result = document.querySelector('.crop-image__result img');
+    var result = cropImageResult.querySelector('img');
     var imageBase64 = result.src.split(',')[1];
     var username = document.querySelector('#username')
 
@@ -134,8 +145,8 @@
 
   function searchFace() {
     var form = document.querySelector('form');
-    var container = document.querySelector('.crop-image__result');
-    var result = document.querySelector('.crop-image__result img');
+    var container = document.querySelector('.search-result');
+    var result = cropImageResult.querySelector('img');
     var imageBase64 = result.src.split(',')[1];
     var username = document.querySelector('#username')
 
@@ -156,6 +167,10 @@
         imageBase64 = 'data:image/jpeg;base64,' + imageBase64;
         var img = new Image();
         img.src = imageBase64;
+        img.width = cropImageResult.offsetWidth;
+        img.height = cropImageResult.offsetHeight;
+        searchResultContainer.classList.remove('hidden');
+        container.innerHTML = "";
         container.appendChild(img);
       })
       .catch(function(error) {
